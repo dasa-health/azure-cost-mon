@@ -1,0 +1,15 @@
+FROM imagesdasa.azurecr.io/prd/base-image:latest
+
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get install -y python-pip
+
+COPY . /tmp
+
+WORKDIR /tmp
+
+RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
+RUN pip install -r requirements.txt && pip install azure-costs-exporter gunicorn
+
+EXPOSE 8000
+ENTRYPOINT python azure_costs_exporter/main.py
